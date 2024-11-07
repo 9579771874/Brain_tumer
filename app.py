@@ -6,8 +6,8 @@ from PIL import Image
 import os
 import os
 
-model_path = os.path.join(os.getcwd(), 'model', 'effnet.keras')
-model = load_model(model_path)
+# model_path = os.path.join(os.getcwd(), 'model', 'effnet.keras')
+model = load_model('effnet.keras')
 
 # Flask app setup
 app = Flask(__name__)
