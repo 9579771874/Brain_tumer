@@ -63,25 +63,29 @@ def logout():
 # Tumor Prediction
 @app.route('/predict', methods=['POST'])
 def predict():
-    if request.method == 'POST':
-        # Check if an image is uploaded
-        if 'file' not in request.files:
-            return "No file uploaded", 400
-        file = request.files['file']
-        if file.filename == '':
-            return "No file selected", 400
-        # Process the image for prediction
-        img = Image.open(file)
+    # Ensure a file is uploaded in the request
+    file = request.files.get('file')
+    if not file or file.filename == '':
+        return {"error": "No file uploaded or selected"}, 400
+
+    try:
+        # Preprocess the image
+        img = Image.open(file).convert('RGB')  # Ensure 3-channel RGB image
         img = img.resize((150, 150))
-        img_array = np.array(img)
-        img_array = img_array.reshape(1, 150, 150, 3) / 255.0  # Normalize the image
+        img_array = np.array(img, dtype=np.float32) / 255.0  # Normalize image
+        img_array = img_array.reshape(1, 150, 150, 3)
+
         # Predict using the model
         prediction = model.predict(img_array)
         class_index = np.argmax(prediction, axis=1)[0]
+        
+        # Map the prediction to labels
         labels = ['Glioma Tumor', 'No tumor', 'Meningioma Tumor', 'Pituitary Tumor']
         result = labels[class_index]
-        return result
-    return redirect(url_for('home'))
+        
+        return {"prediction": result}, 200
+    except Exception as e:
+        return {"error": str(e)}, 500
 
 if __name__ == '__main__':
     app.run(debug=True)
