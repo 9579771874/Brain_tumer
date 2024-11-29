@@ -3,7 +3,7 @@ from PIL import Image
 import numpy as np
 import tensorflow as tf
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 # Load the model once at startup
 model = tf.keras.models.load_model('effnet.keras')  # Ensure the model path is correct
