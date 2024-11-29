@@ -80,7 +80,7 @@ def predict():
         class_index = np.argmax(prediction, axis=1)[0]
         labels = ['Glioma Tumor', 'No tumor', 'Meningioma Tumor', 'Pituitary Tumor']
         result = labels[class_index]
-        return render_template('result.html', prediction=result)
+        return result
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
